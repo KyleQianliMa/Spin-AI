@@ -186,32 +186,28 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 class AE(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
-        self.encoder_hidden_layer = nn.Linear(
-            in_features=kwargs["input_shape"], out_features=256
+        self.encoder = torch.nn.Sequential(
+            torch.nn.Linear(kwargs["input_shape"], 512),
+            torch.nn.ReLU(),
+            torch.nn.Linear(512, 256),
+            torch.nn.ReLU(),
+            torch.nn.Linear(256, 128),
+            torch.nn.ReLU(),
         )
-        self.encoder_output_layer = nn.Linear(
-            in_features=256, out_features=128
-        )
-        self.decoder_hidden_layer = nn.Linear(
-            in_features=128, out_features=256
-        )
-        self.decoder_output_layer = nn.Linear(
-            in_features=256, out_features=kwargs["input_shape"]
+        self.decoder = torch.nn.Sequential(
+            torch.nn.Linear(128, 256),
+            torch.nn.ReLU(),
+            torch.nn.Linear(256, 512),
+            torch.nn.ReLU(),
+            torch.nn.Linear(512, kwargs["input_shape"]),
+            torch.nn.ReLU()
         )
 
+         
+
     def forward(self, features):
-        activation = self.encoder_hidden_layer(features)
-        activation = torch.relu(activation)
-        
-        code = self.encoder_output_layer(activation)
-        code = torch.relu(code)
-        
-        activation = self.decoder_hidden_layer(code)
-        activation = torch.relu(activation)
-        
-        activation = self.decoder_output_layer(activation)
-        reconstructed = torch.relu(activation)
-        
+        encoded = self.encoder(features)
+        reconstructed = self.decoder(encoded)
         return reconstructed
 
 epochs=100
@@ -253,6 +249,7 @@ for epoch in range(epochs):
     # display the epoch training loss
     print("epoch : {}/{}, loss = {:.6f}".format(epoch + 1, epochs, loss))
 
+#%%-----------Save Model---------------
 EPOCH = 100
 PATH = "model.pt"
 LOSS = 0.4
@@ -262,7 +259,7 @@ torch.save({
             'optimizer_state_dict': optimizer.state_dict(),
             'loss': LOSS,
             }, PATH)
-
+#%%-----------Load Model------------------------
 model = AE(input_shape=249500).to(device)
 
 # create an optimizer object
