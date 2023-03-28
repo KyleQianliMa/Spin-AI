@@ -190,7 +190,7 @@ class AE(nn.Module):
             in_features=kwargs["input_shape"], out_features=256
         )
         self.encoder_output_layer = nn.Linear(
-            in_features=258, out_features=128
+            in_features=256, out_features=128
         )
         self.decoder_hidden_layer = nn.Linear(
             in_features=128, out_features=256
@@ -202,15 +202,19 @@ class AE(nn.Module):
     def forward(self, features):
         activation = self.encoder_hidden_layer(features)
         activation = torch.relu(activation)
+        
         code = self.encoder_output_layer(activation)
         code = torch.relu(code)
+        
         activation = self.decoder_hidden_layer(code)
         activation = torch.relu(activation)
+        
         activation = self.decoder_output_layer(activation)
         reconstructed = torch.relu(activation)
+        
         return reconstructed
 
-epochs=1000
+epochs=100
 
 #  use gpu if available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -249,6 +253,28 @@ for epoch in range(epochs):
     # display the epoch training loss
     print("epoch : {}/{}, loss = {:.6f}".format(epoch + 1, epochs, loss))
 
+EPOCH = 100
+PATH = "model.pt"
+LOSS = 0.4
+torch.save({
+            'epoch': EPOCH,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': LOSS,
+            }, PATH)
+
+model = AE(input_shape=249500).to(device)
+
+# create an optimizer object
+# Adam optimizer with learning rate 1e-3
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+checkpoint = torch.load(PATH)
+model.load_state_dict(checkpoint['model_state_dict'])
+optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+epoch = checkpoint['epoch']
+loss = checkpoint['loss']
+
+model.eval()
 #%%---------testing AE----------
 i=1
 predicted=model(data_test[i])
