@@ -21,10 +21,16 @@ to the inelastic neutron data above.
 
 A simple PCA algorithm that relies on linear eigen-decomposition has proven to be able to accurately re-construct neutron data using 128 dimensions. To study the non-linear relationships between the latent space and neutron data we deploy a prototypical auto-enocder and trains it on 2000 simulated images. The results looks like this:
 
-![alt text](pictures/Picture5.png).
+![alt text](pictures/Presentation1.png)
 
 # Autoencoder + Feed Forward Neural Network
 
-However our goal is not image2image but image-to-parameter. To extract the relationship between the latent space we now interfere our autoencoder with a Feed-forward neural network and train the global MSR loss using PyTorch. Working on synthetic data, Spin-AI is able to succesfully 
+However our goal is not image2image but image-to-parameter. To extract the relationship between the latent space we now interfere our autoencoder with a Feed-forward neural network and train the global MSR loss using PyTorch. The architech of the Spin-AI is shown below:
 
-![alt text](pictures/Presentation1.png).
+![alt text](pictures/Picture4.png).
+
+We have discoverd that for synthetic data Spin-AI can accurately predict the exchange Hamiltonian parameters:
+
+![alt text](pictures/Picture6.png).
+
+Currently we are testing Spin-AI on real experimental data such that instrumental resolution and noises becomes non-negligble.
