@@ -10,4 +10,21 @@ The $Yb_2O_3$ is a binary system with complex chiral structural. The $Yb$ is the
 
 For example, how would you fit a spin wave data that looks like this:
 
-  <img src="https://github.com/KyleQianliMa/Spin-AI/tree/main/pictures/Picture3.png" width="10">
+![alt text](pictures/Picture3.png)
+
+# Dimension Reduction(PCA, Autoencoder)
+The goal for Spin-AI is to discover a hidden relationship between the two exchange matrices of the form:
+
+![alt text](pictures/Picture2.png)
+
+to the inelastic neutron data above.
+
+A simple PCA algorithm that relies on linear eigen-decomposition has proven to be able to accurately re-construct neutron data using 128 dimensions. To study the non-linear relationships between the latent space and neutron data we deploy a prototypical auto-enocder and trains it on 2000 simulated images. The results looks like this:
+
+![alt text](pictures/Picture5.png).
+
+# Autoencoder + Feed Forward Neural Network
+
+However our goal is not image2image but image-to-parameter. To extract the relationship between the latent space we now interfere our autoencoder with a Feed-forward neural network and train the global MSR loss using PyTorch. Working on synthetic data, Spin-AI is able to succesfully 
+
+![alt text](pictures/Presentation1.png).
