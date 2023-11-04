@@ -103,7 +103,7 @@ class AE(nn.Module):
 
 
 #%%----------------------Initial training the AE-----------------------
-def Training(epochs,model_name,PATH):
+def Training(epochs,model_name,dataloader,PATH):
 
     '''This function check if wether a model already exists in the PATH. If PATH exists it load and re-train and save model.
        If not it train a new model and save it.
@@ -226,7 +226,7 @@ if  __name__=='__main__':
     model_name='Cu3TeO6.pt' #only contains the material name and .pt
     PATH = r"R:\SpinwAI\Cu3TeO6\model_"+model_name
     epochs=5 #change this number to around 1000 for initial training
-    model,loss,optimizer=Training(epochs,model_name,PATH)
+    model,loss,optimizer=Training(epochs,model_name,dataloader,PATH)
 
     model_name='Cu3TeO6.pt' #change model name and path if we want to test different models
     PATH = r"R:\SpinwAI\Cu3TeO6\model_"+model_name
